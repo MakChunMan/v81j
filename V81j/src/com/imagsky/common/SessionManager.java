@@ -2,10 +2,8 @@ package com.imagsky.common;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.ServletContext;
-
-//import com.imagsky.v5.bean.CMAUser;
-import com.imagsky.v6.cma.constants.SystemConstants;
-import com.imagsky.util.logger.cmaLogger;
+import com.imagsky.common.SystemConstants;
+import com.imagsky.util.logger.PortalLogger;
 import com.imagsky.utility.MD5Utility;
 
 public class SessionManager {
@@ -18,7 +16,7 @@ public class SessionManager {
 	public static ImagskySession getSession(HttpServletRequest request, ServletContext context){
 		final String METHOD_NAME = "getSession";
 		
-		cmaLogger.debug(CLASS_NAME+ " " + METHOD_NAME + SystemConstants.LOG_START,request);
+		PortalLogger.debug(CLASS_NAME+ " " + METHOD_NAME + SystemConstants.LOG_START,request);
 		if(request.getSession()==null){
 			request.getSession(true);
 		}
@@ -26,7 +24,7 @@ public class SessionManager {
 		if(session!=null){
 			session.setSessionLastUpdateDate(new java.util.Date());
 		} else {
-			cmaLogger.debug(CLASS_NAME+ " " + METHOD_NAME + " Existing" ,request);
+			PortalLogger.debug(CLASS_NAME+ " " + METHOD_NAME + " Existing" ,request);
 			session = new ImagskySession();
 			session.setLogined(false);
 			session.setSessionCreateDate(new java.util.Date());
@@ -40,7 +38,7 @@ public class SessionManager {
 			session.setContext(context);
 		}
 		session.setRequest(request);
-		cmaLogger.debug(CLASS_NAME+ " " + METHOD_NAME + SystemConstants.LOG_END,request);
+		PortalLogger.debug(CLASS_NAME+ " " + METHOD_NAME + SystemConstants.LOG_END,request);
 		request.getSession(false).setAttribute(SystemConstants.REQ_ATTR_SESSION, session);
 		return session;
 
@@ -48,12 +46,12 @@ public class SessionManager {
 	
 	public static void uploadSessionWithLoginInfo(HttpServletRequest request, boolean isLogin, String loginUserID){
 		final String METHOD_NAME = "uploadSessionWithLoginInfo";
-		cmaLogger.debug(CLASS_NAME+ " " + METHOD_NAME + SystemConstants.LOG_START);
+		PortalLogger.debug(CLASS_NAME+ " " + METHOD_NAME + SystemConstants.LOG_START);
 		ImagskySession session = getSession(request);
 		session.setLogined(isLogin);
 		//session.setUserid(loginUserID);
 		request.getSession(false).setAttribute(SystemConstants.REQ_ATTR_SESSION, session);
-		cmaLogger.debug(CLASS_NAME+ " " + METHOD_NAME + SystemConstants.LOG_END);
+		PortalLogger.debug(CLASS_NAME+ " " + METHOD_NAME + SystemConstants.LOG_END);
 	}
 	
 	public static boolean isLogin(HttpServletRequest request){
