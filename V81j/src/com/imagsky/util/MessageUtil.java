@@ -4,7 +4,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import com.imagsky.v6.cma.constants.SystemConstants;
+import com.imagsky.common.SystemConstants;
 import com.imagsky.v81j.domain.StringMessage;
 import com.imagsky.v81j.domain.StringMessagePK;
 import com.imagsky.util.logger.*;

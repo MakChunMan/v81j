@@ -26,26 +26,25 @@ public class SystemConstants {
 	//Return Objects
 	public static final String REQ_ATTR_OBJ_LIST = "portalList";
 	public static final String REQ_ATTR_OBJ = "portalObject";
-    public static final String REQ_ATTR_OBJ_BO = "portalObjBO"; //BulkOrderItem
 	
 	
 	public static final String CONTEXT_PROPERTIES_FOLDER = "contextPropertiesFolder";
 	public static final String ACTION_NAME = "action";
-	public static final String SERVLET_URL = "/do/";
+	//public static final String SERVLET_URL = "/do/";
 	public static final String PUBLIC_SUFFIX = ".do";
-	public static final String PUBLIC_VIEW_app_code = ",PUBLIC,SALES,";
-	public static final String SYSTEM_BANNER_PREFIX = "SYSBNR_";
+	//public static final String PUBLIC_VIEW_app_code = ",PUBLIC,SALES,";
+	//public static final String SYSTEM_BANNER_PREFIX = "SYSBNR_";
 	
 	public static final String PUBLIC_AJAX_ITEM_TEMPLATE_PREFIX = "aj_"; //Usage: this prefix + contenttype.CTTP_ITEM_TEMPLATE
 	public static final String PUBLIC_AJAX_FLG = "PAJ";// "1".equalsIgnoreCase(request.getParameter(SystemConstants.PUBLIC_AJAX_FLG)) => Use AJAX Item Template
 	
 	//Properties Filename
-	public static final String SITE_PROP_FILENAME = "v6site";
+	public static final String SITE_PROP_FILENAME = "v81site";
 	//Properties Key
 	public static final String PROP_PROPERTIES_FOLDER = "sys.propFolder";
 	
 	//DB
-	public static final String PERSISTENCE_NAME = "V6PERSISTENCE";//Ref to persistence.xml
+	public static final String PERSISTENCE_NAME = "V81PERSISTENCE";//Ref to persistence.xml
 	public static final String DB_ASC = " asc";
 	public static final String DB_DESC = " desc";
 	
@@ -54,12 +53,8 @@ public class SystemConstants {
 	public static final String LOG_END = "[ END ]";
 	
 	//V6
-	public static final String DB_DS_PROPERTIES_NAME = "v6.1_db";
-	public static final String DB_DS_DATABASE_NAME = "v6";
-	
-	//NodeMap key type
-	public static final String NODMAP_KEY_C_GUID = "contentGuid";
-	public static final String NODMAP_KEY_N_URL = "nodeUrl";
+	//public static final String DB_DS_PROPERTIES_NAME = "v6.1_db";
+	//public static final String DB_DS_DATABASE_NAME = "v6";
 	
 	public static final String HTTPS = "https://";
 	public static final String HTTP = "http://";
@@ -67,6 +62,15 @@ public class SystemConstants {
 	public static final String MAIN_SITE_URL = "main";
 	public static final String DEFAULT_LANG = "zh";
 	
-	//Cart setting
-	public static final int PUB_CART_BO_MAX_ITEM = 5;
+	//Jquery validation - server side
+	public static final String AJAX_RESULT = "v8_ajax_result";
+	public static final String AJAX_RESULT_TRUE = "true";
+	public static final String AJAX_RESULT_FALSE = "false";
+	
+	//
+	public static final String V8_PATH = "/v81/";
+	public static final String V8_ZH_PATH = "/v81/zh/";		
+
+	//
+	public static final int V8_MAX_NO_MODULE = 6; 
 }

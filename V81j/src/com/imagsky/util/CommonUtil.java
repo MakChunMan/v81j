@@ -837,7 +837,7 @@ public class CommonUtil {
     
     public static String getHttpServerHostWithPort(HttpServletRequest req) {
         StringBuffer sb = new StringBuffer();
-        if (req.isSecure() && V6Util.isSSLOn()) {
+        if (req.isSecure() && V81Util.isSSLOn()) {
             sb.append("https://");
         } else {
             sb.append("http://");
@@ -850,7 +850,7 @@ public class CommonUtil {
     }
 
     public static String getHttpProtocal(HttpServletRequest req) {
-        if (req.isSecure() && V6Util.isSSLOn()) {
+        if (req.isSecure() && V81Util.isSSLOn()) {
             return "https://";
         } else {
             return "http://";
@@ -858,7 +858,7 @@ public class CommonUtil {
     }
 
     public static String getSecureFullRequestURL(HttpServletRequest req) {
-        if (!V6Util.isSSLOn()) {
+        if (!V81Util.isSSLOn()) {
             return req.getAttribute("fullRequestURL").toString();
         } else {
             return req.getAttribute("fullRequestURL").toString().replaceAll("http:", "https:");

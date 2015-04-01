@@ -1,0 +1,1 @@
+<script>self.location="/v81/zh/page_ready_login.php";</script>

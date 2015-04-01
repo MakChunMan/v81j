@@ -10,7 +10,7 @@ public class PortalLogger {
     public static final int DEBUG_LEVEL = 2;
     public static final int INFO_LEVEL = 3;
     public static final int WARN_LEVEL = 4;
-    public static final String LOGGER_NAME_V6_ERROR = "V6CMALOG";
+    public static final String LOGGER_NAME_V81_ERROR = "V81CMALOG";
 
     public static final int BUFFER_SIZE = 50;
     public static final String[] LEVEL_NAME = new String[]{"LV0","LV1","DEBUG","INFO","WARN","ERROR"};
@@ -26,7 +26,7 @@ public class PortalLogger {
     public static void log(String FreeTextInfo, int level) {
         StringBuffer msg = new StringBuffer();
         msg = msg.append(FreeTextInfo);
-        log(LOGGER_NAME_V6_ERROR, msg.toString(), level);
+        log(LOGGER_NAME_V81_ERROR, msg.toString(), level);
         addToLogBuffer(msg.toString(), level);
     }
 
@@ -55,7 +55,7 @@ public class PortalLogger {
         msg = msg.append(METHOD_NAME + "\t");
         msg = msg.append(FreeTextInfo);
 
-        log(LOGGER_NAME_V6_ERROR, msg.toString(), level);
+        log(LOGGER_NAME_V81_ERROR, msg.toString(), level);
     }
 
     /**
@@ -93,7 +93,7 @@ public class PortalLogger {
     }
 
     public static void logError(String msg, Throwable th) {
-        Logger logger = Logger.getLogger(LOGGER_NAME_V6_ERROR);
+        Logger logger = Logger.getLogger(LOGGER_NAME_V81_ERROR);
         logger.error(msg, th);
     }
 

@@ -8,7 +8,7 @@ import com.imagsky.util.logger.*;
 public class HandlerFactory {
 
 	private static final String CLASSNAME = "HandlerFactory";
-	private static final String ACTION_PACKAGE = "com.imagsky.v81.servlet.handler";
+	private static final String ACTION_PACKAGE = "com.imagsky.v81j.servlet.handler";
 	private static final String ACTION_CLASS_NAME_SUFFIX = "_Handler";
 	private static final String SITEACTION_PACKAGE(String site){
 		return "com.imagsky."+site+".handler";

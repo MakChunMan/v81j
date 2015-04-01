@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="1.0"
+        xmlns="http://java.sun.com/xml/ns/persistence"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
+        <persistence-unit name="V81PERSISTENCE" transaction-type="JTA">
+            <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+            <jta-data-source>jdbc/v81portal</jta-data-source>
+		    <class>com.imagsky.v81j.domain.SysObject</class>
+		    <class>com.imagsky.v81j.domain.Member</class>
+		    <class>com.imagsky.v81j.domain.StringMessage</class>
+            <class>com.imagsky.v81j.domain.App</class>
+            <class>com.imagsky.v81j.domain.Module</class>
+            <class>com.imagsky.v81j.domain.ModAboutPage</class>
+            <class>com.imagsky.v81j.domain.AppImage</class>
+            <class>com.imagsky.v81j.domain.ModForm</class>
+            <class>com.imagsky.v81j.domain.FormField</class>
+            <class>com.imagsky.v81j.domain.FormSubmit</class>
+            <properties>
+                    <property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
+                    <property name="eclipselink.ddl-generation.output-mode" value="sql-script" />
+                    <property name="eclipselink.query-results-cache" value="false"/>
+            </properties>
+        </persistence-unit>
+</persistence>
