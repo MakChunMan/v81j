@@ -17,7 +17,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 public class V81Util {
-
+	public static final String CLASSNAME = "V81Util";
+	
     public static boolean isSSLOn() {
         if (PropertiesConstants.get(PropertiesConstants.secure).equalsIgnoreCase("on")) {
             return true;
@@ -43,6 +44,8 @@ public class V81Util {
     }
 
     public static boolean RedirectToLogin(HttpServletRequest req, String actionHandler, boolean isV7){
+    	final String METHODNAME = "RedirectToLogin";
+    	
         try {
             String[] needLoginModules = CommonUtil.stringTokenize(System.getProperty(PropertiesConstants.needLogin), ",");
             List<String> wordList = Arrays.asList(needLoginModules);
@@ -70,7 +73,7 @@ public class V81Util {
                 return true;
             }
         } catch (Exception e) {
-            PortalLogger.error("RedirectToLogin Exception :", e);
+            PortalLogger.error(CLASSNAME, METHODNAME, "RedirectToLogin Exception :", e);
             e.printStackTrace(System.err);
             return true;
         }

@@ -94,9 +94,10 @@ public class ImagskySession {
 			return null;
 		if(!CommonUtil.isNullOrEmpty(workingApp.getModules())){
 			Iterator<Module> it = workingApp.getModules().iterator();
+			/*** DEBUG
 			while(it.hasNext()){
 				PortalLogger.debug(((Module)it.next()).getModuleTitle());
-			}
+			}***/
 		}
 		return workingApp;
 	}

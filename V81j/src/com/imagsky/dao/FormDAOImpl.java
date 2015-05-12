@@ -2,6 +2,7 @@ package com.imagsky.dao;
 
 import java.util.HashSet;
 import java.util.List;
+
 import javax.persistence.EntityManager;
 
 import com.imagsky.exception.BaseDBException;
@@ -12,7 +13,7 @@ import com.imagsky.v81j.domain.FormField;
 import com.imagsky.v81j.domain.ModForm;
 
 public class FormDAOImpl extends FormDAO {
-
+	public static final String CLASSNAME = "FormDAOImpl";
 
     private static FormDAOImpl impl = new FormDAOImpl();
     protected static final String thisDomainClassName = "com.imagsky.v81j.domain.ModForm";
@@ -24,8 +25,11 @@ public class FormDAOImpl extends FormDAO {
     public static FormDAO getInstance() {
         return impl;
     }
+    
 	@Override
 	public Object CNT_update(Object obj) throws BaseDBException {
+		final String METHODNAME = "CNT_update";
+		
 		Class thisContentClass = contentClassValidation(domainClassName);
         EntityManager em = factory.createEntityManager();
 
@@ -40,6 +44,7 @@ public class FormDAOImpl extends FormDAO {
             if (!CommonUtil.isNullOrEmpty(module.getForm_name())) {
             	tmpModule.setForm_name(module.getForm_name());
             }
+            tmpModule.setForm_success_msg(module.getForm_success_msg());
             tmpModule.setForm_fields(module.getForm_fields());
             HashSet<FormField> aSet = new HashSet<FormField>();
             for(FormField thisFormField: module.getForm_fields()){
@@ -91,7 +96,7 @@ public class FormDAOImpl extends FormDAO {
             em.getTransaction().commit();
             module = em.find(ModForm.class, module.getForm_name());
         } catch (Exception e) {
-        	PortalLogger.error("CNT_update Error: " + module.getForm_name(), e);
+        	PortalLogger.error(CLASSNAME, METHODNAME, "CNT_update Error: " + module.getForm_name(), e);
             return null;
         }
         return module;

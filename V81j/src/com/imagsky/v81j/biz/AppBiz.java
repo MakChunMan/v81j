@@ -21,7 +21,8 @@ import com.imagsky.v81j.biz.V8AbstractBiz;
 import com.imagsky.v81j.domain.App;
 
 public class AppBiz extends V8AbstractBiz {
-
+	public static final String CLASSNAME = "AppBiz";
+	
 	protected AppBiz(Member thisMember, HttpServletRequest req){
 		super(thisMember, req);
 	}
@@ -46,6 +47,7 @@ public class AppBiz extends V8AbstractBiz {
 	
 	//#2. Create apps for member
 	public App addApp(){
+		final String METHODNAME = "addApp";
 		App newApp = new App();
 		newApp.setAPP_NAME(this.getParam("app-name")[0]);
 		newApp.setAPP_TYPE(Integer.parseInt(this.getParam("app-type")[0]));
@@ -64,7 +66,7 @@ public class AppBiz extends V8AbstractBiz {
 			this.getOwner().setApps(aSet);
 			mDao.update(this.getOwner());
 		} catch (Exception e){
-			PortalLogger.error("Error AppDAO", e);
+			PortalLogger.error(CLASSNAME, METHODNAME, "Error AppDAO", e);
 		}
 		
 		return newApp;
@@ -73,6 +75,7 @@ public class AppBiz extends V8AbstractBiz {
 	//#4. Delete apps
 	//#5. Change apps name or description
 	public App update() {
+		final String METHODNAME = "update";		
         AppDAO dao = AppDAO.getInstance();
         App app = new App();
 
@@ -101,13 +104,14 @@ public class AppBiz extends V8AbstractBiz {
             return app;
         } catch (Exception e) {
             this.addErrorMsg("AppBiz.update() Exception: " + this.getParam("edit_guid")[0]);
-            PortalLogger.error("AppBiz.update() Exception", e);
+            PortalLogger.error(CLASSNAME, METHODNAME, "Exception", e);
             return null;
         }
     }
 	
 	//#6 Reload App
 	public App reloadApp(App oldApp){
+		final String METHODNAME = "reloadApp";
 		AppDAO dao = AppDAO.getInstance();
 		App enqObj = new App();
 		enqObj.setSys_guid(oldApp.getSys_guid());
@@ -116,12 +120,12 @@ public class AppBiz extends V8AbstractBiz {
 		try {
 			aList = dao.CNT_findListWithSample(enqObj);
 			if(CommonUtil.isNullOrEmpty(aList)){
-				PortalLogger.error("Cannot find app:"+ oldApp.getSys_guid());
+				PortalLogger.error(CLASSNAME, METHODNAME, "Cannot find app:"+ oldApp.getSys_guid());
 			}
 			return (App)(aList.get(0));
 		} catch (BaseDBException e) {
 			// TODO Auto-generated catch block
-			PortalLogger.error("reloadApp error:" + oldApp.getSys_guid(), e );
+			PortalLogger.error(CLASSNAME, METHODNAME, "reloadApp error:" + oldApp.getSys_guid(), e );
 			return null;
 		}
 	}

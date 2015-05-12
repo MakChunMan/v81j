@@ -43,6 +43,13 @@ if(thisMod == null)
                   <span class="help-block"><%=MessageUtil.getV8Message(lang,"FORM_TITLE_LABEL") %></span>
               </div>
           </div>
+          <div class="form-group">
+              <label class="col-md-3 control-label" for="edit-form-success"><%=MessageUtil.getV8Message(lang,"FORM_SUCCESS") %></label>
+              <div class="col-md-9">
+                  <input type="text" id="edit-form-success" name=edit-form-success class="form-control" value="<%=CommonUtil.null2Empty(thisMod.getForm_success_msg())%>">
+                  <span class="help-block"><%=MessageUtil.getV8Message(lang,"FORM_SUCCESS_LABEL") %></span>
+              </div>
+          </div>          
           <div class="form-group" id="form-field-div">
                     <label class="col-md-3 control-label" for="edit-abt-title"><%=MessageUtil.getV8Message(lang,"FORM_FIELDS") %></label>
                     <div class="col-md-9">

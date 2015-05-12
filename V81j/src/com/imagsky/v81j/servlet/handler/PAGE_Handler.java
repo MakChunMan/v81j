@@ -82,6 +82,7 @@ public class PAGE_Handler extends BaseHandler  {
 	}
 	
 	private SiteResponse doRegister(HttpServletRequest request, HttpServletResponse response) {
+		final String METHODNAME = "doRegister";
 		SiteResponse thisResp = super.createResponse();
 		
 		MemberDAO dao = MemberDAO.getInstance();
@@ -188,7 +189,7 @@ public class PAGE_Handler extends BaseHandler  {
 						mailer.setSubject(MessageUtil.getV8Message(lang, "EMAIL_REG_SUCCESS_SUBJ"));
 						mailer.setContent(emailContent);
 						if (!mailer.send()){
-							PortalLogger.error("Member registration email failed - " + newMember.getMem_login_email());
+							PortalLogger.error(CLASS_NAME, METHODNAME, "Member registration email failed - " + newMember.getMem_login_email());
 						}
 						//Set Content for general message page
 						ArrayList<String> genParam = new ArrayList<String>();
@@ -212,11 +213,11 @@ public class PAGE_Handler extends BaseHandler  {
 						}***/
 					} catch (Exception e){
 						PortalLogger.debug("[doRegister DAO Create FAILED]");
-						PortalLogger.error("Generate Register URL Error: " + newMember.getMem_login_email(), e);
+						PortalLogger.error(CLASS_NAME, METHODNAME, "Generate Register URL Error: " + newMember.getMem_login_email(), e);
 					}
 					
 				} else {
-					PortalLogger.error("LOGIN_Handler.doRegister Error: Unknown error" , request);
+					PortalLogger.error(CLASS_NAME, METHODNAME, "LOGIN_Handler.doRegister Error: Unknown error" , request);
 				}
 			}
 			PortalLogger.debug("[doRegister DAO COMPLETED]");
@@ -235,7 +236,7 @@ public class PAGE_Handler extends BaseHandler  {
 		} catch (BaseDBException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			PortalLogger.error("LOGIN_Handler.doRegister Error: " , request, e);
+			PortalLogger.error(CLASS_NAME, METHODNAME, "LOGIN_Handler.doRegister Error: " , request, e);
 			thisResp.setTargetJSP(JspMapping.COMMON_AJAX_RESPONSE);
 		}
 		PortalLogger.debug("[doRegister END]");
@@ -249,6 +250,7 @@ public class PAGE_Handler extends BaseHandler  {
 	}
 
 	private SiteResponse doReminder(HttpServletRequest request, HttpServletResponse response) {
+		final String METHODNAME = "doReminder";
 		SiteResponse thisResp = super.createResponse();
 		ArrayList<String> emailParam = new ArrayList<String>();
 		String lang = (String)request.getAttribute(SystemConstants.REQ_ATTR_LANG);
@@ -258,7 +260,7 @@ public class PAGE_Handler extends BaseHandler  {
 			fpwdMember.setMem_login_email(request.getParameter("reminder-email"));
 			List<?> fpwdMemberList = dao.findListWithSample(fpwdMember);
 			if(fpwdMemberList ==null || fpwdMemberList.size()==0){
-				PortalLogger.error("[FORGET_PWD] Not found User: " + request.getRemoteAddr() + " MEMBER EMAIL:"+ request.getParameter("reminder-email"), request);
+				PortalLogger.error(CLASS_NAME, METHODNAME, "[FORGET_PWD] Not found User: " + request.getRemoteAddr() + " MEMBER EMAIL:"+ request.getParameter("reminder-email"), request);
 				thisResp.addErrorMsg(new SiteErrorMessage("FPWD_NO_USER"));
 			} else {
 				PortalLogger.info("[FORGET_PWD] FPWD Request: " + request.getRemoteAddr() + " MEMBER EMAIL:"+ request.getParameter("reminder-email"), request);
@@ -277,7 +279,7 @@ public class PAGE_Handler extends BaseHandler  {
 				mailer.setSubject(MessageUtil.getV8Message(lang, "EMAIL_FPWD_SUBJ"));
 				mailer.setContent(MessageUtil.getV8Message(lang, "EMAIL_FPWD", emailParam));
 				if (!mailer.send()){
-					PortalLogger.error("[FORGET_PWD] FPWD Email - " + fpwdMember.getMem_login_email(), request);
+					PortalLogger.error(CLASS_NAME, METHODNAME, "[FORGET_PWD] FPWD Email - " + fpwdMember.getMem_login_email(), request);
 				}
 				request.setAttribute(SystemConstants.REQ_ATTR_GENERAL_TITLE, MessageUtil.getV8Message(lang, "TIT_FORGETPWD"));
 				request.setAttribute(SystemConstants.REQ_ATTR_GENERAL_MSG, MessageUtil.getV8Message(lang, "FPWD_MSG_ACK"));
@@ -286,7 +288,7 @@ public class PAGE_Handler extends BaseHandler  {
 			}
 			
 		} catch (Exception e){
-			PortalLogger.error("FORGET PASSWORD Request error: ", request,e);
+			PortalLogger.error(CLASS_NAME, METHODNAME, "FORGET PASSWORD Request error: ", request,e);
 		}
 		thisResp.setTargetJSP(JspMapping.COMMON_AJAX_RESPONSE);
 		return thisResp;

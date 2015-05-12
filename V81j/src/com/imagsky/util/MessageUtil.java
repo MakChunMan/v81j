@@ -13,11 +13,13 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 	
 public class MessageUtil {
+	public static final String CLASSNAME = "MessageUtil";
 
 	private static final String paramSymbol = "@@";
 	public static String MOD_V8 = "V8";
 	
 	public static String getMessage(String mod, String lang, String appCode, ArrayList<String> param){
+		final String METHODNAME = "getMessage";
 		String str = getMessage(mod, lang, appCode);
 		if(param==null){
 			return str;
@@ -26,7 +28,7 @@ public class MessageUtil {
 				try{
 					str = str.replaceAll(paramSymbol + (x+1) + paramSymbol, Matcher.quoteReplacement(CommonUtil.null2Empty(param.get(x))));
 				} catch (Exception e){
-					PortalLogger.error("replaceAll Exception: " + paramSymbol + (x+1) + paramSymbol, e);
+					PortalLogger.error(CLASSNAME, METHODNAME, "replaceAll Exception: " + paramSymbol + (x+1) + paramSymbol, e);
 				}
 			}
 			return str;

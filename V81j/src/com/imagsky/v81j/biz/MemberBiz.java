@@ -14,7 +14,8 @@ import com.imagsky.v81j.domain.Member;
 import java.util.List;
 
 public class MemberBiz {
-
+	public static final String CLASSNAME = "MemberBiz";
+	
 	private static MemberBiz instance = null;
 
 	protected MemberBiz() {
@@ -29,6 +30,7 @@ public class MemberBiz {
 	}
 
 	public Member doCheckMemberExist(String email) throws Exception {
+		final String METHODNAME = "doCheckMemberExist";
 		MemberDAO mDAO = MemberDAO.getInstance();
 		Member member = new Member();
 		try {
@@ -41,7 +43,7 @@ public class MemberBiz {
 				return (Member) aList.get(0);
 			}
 		} catch (Exception e) {
-			PortalLogger.error("MemberBiz.doCheckMemberExist: ", e);
+			PortalLogger.error(CLASSNAME, METHODNAME, "MemberBiz.doCheckMemberExist: ", e);
 			throw e;
 		}
 	}
@@ -51,12 +53,13 @@ public class MemberBiz {
 	}
 
 	public Member doSaveMember(Member member) throws Exception {
+		final String METHODNAME = "doSaveMember";
 		MemberDAO mDAO = MemberDAO.getInstance();
 		try {
 			mDAO.update(member);
 			return member;
 		} catch (Exception e) {
-			PortalLogger.error("doMemberTransaction: Invalid memberGUID", e);
+			PortalLogger.error(CLASSNAME, METHODNAME, "doMemberTransaction: Invalid memberGUID", e);
 			throw e;
 		}
 	}
@@ -82,7 +85,8 @@ public class MemberBiz {
 	 * @throws BaseDBException
 	 */
 	public Member getFBMemberLogin(Member inMember) throws BaseDBException {
-
+		final String METHODNAME = "getFBMemberLogin";
+		
 		// Enquiry Obj
 		Member emailMember = new Member();
 		emailMember.setMem_login_email(inMember.getMem_login_email());
@@ -101,11 +105,11 @@ public class MemberBiz {
 		// Validation
 		if (!notFoundById && !((Member) idList.get(0)).getMem_login_email().equalsIgnoreCase(inMember.getMem_login_email())) {
 			// Found FB ID but register with different email
-			PortalLogger.error("[FB LOGIN] error: Contradiction of email for Facebook ID - " + inMember.getFb_id() + "(Email: " + inMember.getMem_login_email() + ")");
+			PortalLogger.error(CLASSNAME, METHODNAME, "[FB LOGIN] error: Contradiction of email for Facebook ID - " + inMember.getFb_id() + "(Email: " + inMember.getMem_login_email() + ")");
 			return ((Member) idList.get(0));
 		} else if (!notFoundByEmail && ((Member) emailList.get(0)).getFb_id() != null && !((Member) emailList.get(0)).getFb_id().equalsIgnoreCase(inMember.getFb_id())) {
 			// Found FB ID but register with different email
-			PortalLogger.error("[FB LOGIN] error: Contradiction of FB ID for Facebook ID (DB:" + ((Member) emailList.get(0)).getFb_id() + " - " + inMember.getFb_id() + "(Email: " + inMember.getMem_login_email() + ")");
+			PortalLogger.error(CLASSNAME, METHODNAME, "[FB LOGIN] error: Contradiction of FB ID for Facebook ID (DB:" + ((Member) emailList.get(0)).getFb_id() + " - " + inMember.getFb_id() + "(Email: " + inMember.getMem_login_email() + ")");
 			return null;
 		} else if (notFoundByEmail && notFoundById) {
 			// initialize new member
@@ -123,7 +127,7 @@ public class MemberBiz {
 				PortalLogger.debug("[FB doRegister DAO Create COMPLETED] FB ID: " + inMember.getFb_id());
 				return inMember;
 			} else {
-				PortalLogger.debug("[FB doRegister DAO Create FAIL]");
+				PortalLogger.error(CLASSNAME, METHODNAME,"[FB doRegister DAO Create FAIL]");
 			}
 
 		} else if (!notFoundByEmail && notFoundById) {
@@ -143,7 +147,7 @@ public class MemberBiz {
 				PortalLogger.debug("[FB doRegister DAO Update COMPLETED]");
 				return emailMember;
 			} else {
-				PortalLogger.debug("[FB doRegister DAO Update FAIL]");
+				PortalLogger.error(CLASSNAME, METHODNAME, "[FB doRegister DAO Update FAIL]");
 			}
 		} else {
 			// Existing FB user in BBM

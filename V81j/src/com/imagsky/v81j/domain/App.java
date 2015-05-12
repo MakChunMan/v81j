@@ -79,6 +79,17 @@ public class App extends SysObject {
         returnList.add("APP_DESC");
         return returnList;
     }
+    
+    /*** Ignore those fields when create SELECT SQL in using JPAUtil.
+     * Usage: Usually for int value type to prevent Null convert to Zero
+     * 
+     * ***/ 
+    public static List getIgnoreFields() {
+        List returnList = new ArrayList();
+        returnList.add("APP_TYPE");
+        returnList.add("APP_COLOR_THEME");
+        return returnList;
+    }
 
     public static TreeMap<String, Object> getFields(Object thisObj) {
         TreeMap<String, Object> aHt = new TreeMap<String, Object>();
