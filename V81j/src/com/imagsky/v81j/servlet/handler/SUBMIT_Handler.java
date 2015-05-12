@@ -1,5 +1,7 @@
 package com.imagsky.v81j.servlet.handler;
 
+import java.io.UnsupportedEncodingException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -12,6 +14,7 @@ import com.imagsky.exception.BaseException;
 import com.imagsky.util.CommonUtil;
 import com.imagsky.util.logger.PortalLogger;
 import com.imagsky.v81j.domain.FormSubmit;
+import com.sun.xml.messaging.saaj.util.Base64;
 
 public class SUBMIT_Handler extends BaseHandler {
 
@@ -33,10 +36,12 @@ public class SUBMIT_Handler extends BaseHandler {
         thisLang = (String) request.getAttribute(SystemConstants.REQ_ATTR_LANG);
         
 		//tokenized URL 
-		appCodeToken = (String[])request.getAttribute(SystemConstants.REQ_ATTR_URL_PATTERN); //[0]: "SUBMIT", [1]:"FORM_GUID"
+		appCodeToken = (String[])request.getAttribute(SystemConstants.REQ_ATTR_URL_PATTERN); //[0]: "SUBMIT", [1]:"FORM", [2]:"FORM_GUID
 		
 		try{
-            thisResp = doSubmit(request, response); 
+			if(CommonUtil.null2Empty(appCodeToken[0]).equalsIgnoreCase("SUBMIT")){
+				thisResp = doSaveForm(request, response);
+			}
 		} catch (Exception e){
 			
 		}
@@ -44,7 +49,7 @@ public class SUBMIT_Handler extends BaseHandler {
 		return null;
 	}
 
-	public SiteResponse doSubmit(HttpServletRequest request, HttpServletResponse response) {
+	public SiteResponse doSaveForm(HttpServletRequest request, HttpServletResponse response) {
 		SiteResponse thisResp = super.createResponse();
 		
 		FormSubmitDAO dao = FormSubmitDAO.getInstance();
@@ -54,16 +59,27 @@ public class SUBMIT_Handler extends BaseHandler {
 		try {
 			if(!CommonUtil.isNullOrEmpty(request.getParameter("fguid"))){
 				formSubmit.setFORM_GUID(request.getParameter("fguid"));
+			} else if(appCodeToken.length>2 && appCodeToken[1].equalsIgnoreCase("FORM") && !CommonUtil.isNullOrEmpty(appCodeToken[2])){
+				formSubmit.setFORM_GUID(appCodeToken[2]);
 			} else {
 				thisResp.addErrorMsg(new SiteErrorMessage("FORMSUBMIT_UNKNOWN_FORM"));
 			}
-			formSubmit.setFORM_MACHINE_ID(request.getParameter("fmid"));
-			formSubmit.setFORM_SENDER(request.getParameter("sender"));
-			formSubmit.setFORM_SUBMIT_STRING(request.getParameter("str"));
+			formSubmit.setFORM_MACHINE_ID(request.getParameter("machine_id"));
+			formSubmit.setFORM_SENDER(request.getParameter("shop_id"));
+			
+			Base64 base64util = new Base64();
+			formSubmit.setFORM_SUBMIT_STRING(
+					new String(
+							base64util.decode(CommonUtil.null2Empty(request.getParameter("STR64")).getBytes("UTF-8")),
+							"UTF-8"
+			));
 			if(!thisResp.hasError()){
 				formSubmit = (FormSubmit)dao.CNT_create(formSubmit);
+				
 			}
 		} catch (BaseDBException e) {
+			PortalLogger.error("SUBMIT_Handler.doSubmit()", e);
+		} catch (UnsupportedEncodingException e){
 			PortalLogger.error("SUBMIT_Handler.doSubmit()", e);
 		}
 		return thisResp;
