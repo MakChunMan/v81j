@@ -1,6 +1,12 @@
+/*****
+ * 	2015-05-13:			 /portal/MOD/MOD_EDIT_ABOUTUS/mod_guid changes token index
+ *		2015-05-13 			/portal/MOD/MOD_EDIT_FORM/mod_guid changes token index 
+ * 
+ */
 package com.imagsky.v81j.servlet.handler;
 
 import javax.servlet.http.HttpServletRequest;
+
 import javax.servlet.http.HttpServletResponse;
 
 import com.imagsky.common.ImagskySession;
@@ -123,25 +129,34 @@ public class MOD_Handler extends BaseHandler {
 	}
 
 	//Load About Us Edit Form
+	//2015-05-13 /portal/MOD/MOD_EDIT_ABOUTUS/mod_guid
 	private SiteResponse modShowAboutUs(HttpServletRequest request, HttpServletResponse response) {
 		SiteResponse thisResp = super.createResponse();
 		//Find saved details if necessary
+		PortalLogger.debug("modShowAboutUs start...");
 		if(appCodeToken.length>2 && !CommonUtil.isNullOrEmpty(appCodeToken[2])){
+			PortalLogger.debug("Mod ID:"+ appCodeToken[2]);
 			ModuleBiz biz = ModuleBiz.getInstance(thisMember, request);
 			ModAboutPage obj = (ModAboutPage)biz.getModule(Module.ModuleTypes.ModAboutPage.name(), appCodeToken[2]);
+			if(obj==null)
+				PortalLogger.debug("obj = null");
+			else 
+				PortalLogger.debug("obj"+ obj.getModuleTitle());
 			request.setAttribute(SystemConstants.REQ_ATTR_OBJ, obj);
 		}
+		PortalLogger.debug("modShowAboutUs end...");
 		thisResp.setTargetJSP(JspMapping.MOD_EDIT_ABOUTUS);
 		return thisResp;
 	}
 
 	//Load Form Edit Form
+	//2015-05-13 /portal/MOD/MOD_EDIT_FORM/mod_guid
 	private SiteResponse modShowForm(HttpServletRequest request, HttpServletResponse response) {
 		SiteResponse thisResp = super.createResponse();
 		//Find saved details if necessary
-		if(appCodeToken.length>2 && !CommonUtil.isNullOrEmpty(appCodeToken[2])){
+		if(appCodeToken.length>3 && !CommonUtil.isNullOrEmpty(appCodeToken[3])){
 			ModuleBiz biz = ModuleBiz.getInstance(thisMember, request);
-			ModForm obj = (ModForm)biz.getModule(Module.ModuleTypes.ModForm.name(), appCodeToken[2]);
+			ModForm obj = (ModForm)biz.getModule(Module.ModuleTypes.ModForm.name(), appCodeToken[3]);
 			request.setAttribute(SystemConstants.REQ_ATTR_OBJ, obj);
 		}
 		thisResp.setTargetJSP(JspMapping.MOD_EDIT_FORM);

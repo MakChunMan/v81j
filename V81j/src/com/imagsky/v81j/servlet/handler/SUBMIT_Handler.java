@@ -2,9 +2,11 @@ package com.imagsky.v81j.servlet.handler;
 
 import java.io.UnsupportedEncodingException;
 
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.gson.Gson;
 import com.imagsky.common.SiteErrorMessage;
 import com.imagsky.common.SiteResponse;
 import com.imagsky.common.SystemConstants;
@@ -14,6 +16,7 @@ import com.imagsky.exception.BaseException;
 import com.imagsky.util.CommonUtil;
 import com.imagsky.util.logger.PortalLogger;
 import com.imagsky.v81j.domain.FormSubmit;
+import com.imagsky.v81j.domain.JsonResponse;
 import com.sun.xml.messaging.saaj.util.Base64;
 
 public class SUBMIT_Handler extends BaseHandler {
@@ -43,15 +46,19 @@ public class SUBMIT_Handler extends BaseHandler {
 				thisResp = doSaveForm(request, response);
 			}
 		} catch (Exception e){
-			
 		}
-		
-		return null;
+		return thisResp;
 	}
 
 	public SiteResponse doSaveForm(HttpServletRequest request, HttpServletResponse response) {
 		SiteResponse thisResp = super.createResponse();
+		JsonResponse thisJsonResponse = new JsonResponse();
 		
+		thisJsonResponse.setModule("SAVE_FORM");
+		thisJsonResponse.setSavetime((new java.util.Date()).getTime());
+		thisJsonResponse.setSource_url(request.getRequestURL().toString());
+		thisJsonResponse.setTimestamp((new java.util.Date()).getTime());
+				
 		FormSubmitDAO dao = FormSubmitDAO.getInstance();
 		String lang = (String)request.getAttribute(SystemConstants.REQ_ATTR_LANG);
 		
@@ -68,6 +75,12 @@ public class SUBMIT_Handler extends BaseHandler {
 			formSubmit.setFORM_SENDER(request.getParameter("shop_id"));
 			
 			Base64 base64util = new Base64();
+			PortalLogger.debug("in: "+ request.getParameter("STR64"));
+			PortalLogger.debug("in: "+ request.getParameter("STR64").getBytes("UTF-8"));
+			PortalLogger.debug("in: "+ new String(
+					base64util.decode(CommonUtil.null2Empty(request.getParameter("STR64")).getBytes("UTF-8")),
+					"UTF-8"
+					));			
 			formSubmit.setFORM_SUBMIT_STRING(
 					new String(
 							base64util.decode(CommonUtil.null2Empty(request.getParameter("STR64")).getBytes("UTF-8")),
@@ -75,8 +88,15 @@ public class SUBMIT_Handler extends BaseHandler {
 			));
 			if(!thisResp.hasError()){
 				formSubmit = (FormSubmit)dao.CNT_create(formSubmit);
-				
+				thisJsonResponse.setStatus(JsonResponse.STATUS_OK);
+			} else {
+				thisJsonResponse.setStatus(JsonResponse.STATUS_FAIL);
 			}
+			thisResp.setTargetJSP("/jsp/json.jsp");
+			Gson gson = new Gson();
+			String jsonStrPy = gson.toJson(thisJsonResponse, JsonResponse.class);
+			//WLLogger.info((CommonUtil.isNullOrEmpty(jsonResponse.getModule()) ? "[INVALID]" : "["+jsonResponse.getModule()+"]") + "|" + jsonResponse.getStatus() + "|" + request.getParameter("ts") + "|" + jsonResponse.getEmail() + "|"+ request.getRemoteAddr() + "|"+ requestURI);
+			request.setAttribute("JsonResponse", jsonStrPy);
 		} catch (BaseDBException e) {
 			PortalLogger.error("SUBMIT_Handler.doSubmit()", e);
 		} catch (UnsupportedEncodingException e){
