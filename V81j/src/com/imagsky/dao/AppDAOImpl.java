@@ -11,7 +11,8 @@ import com.imagsky.util.logger.PortalLogger;
 import com.imagsky.v81j.domain.App;
 
 public class AppDAOImpl  extends AppDAO{
-
+	public static final String CLASSNAME = "AppDAOImpl";
+	
     private static AppDAOImpl appDAOImpl = new AppDAOImpl();
     protected static final String thisDomainClassName = "com.imagsky.v81j.domain.App";
     
@@ -25,6 +26,7 @@ public class AppDAOImpl  extends AppDAO{
     
 	@Override
 	public Object CNT_update(Object obj) throws BaseDBException {
+		final String METHODNAME = "CNT_update";
 		 Class thisContentClass = contentClassValidation(domainClassName);
 	        EntityManager em = factory.createEntityManager();
 
@@ -55,7 +57,7 @@ public class AppDAOImpl  extends AppDAO{
 	            em.getTransaction().commit();
 	            app = em.find(App.class, app.getSys_guid());
 	        } catch (Exception e) {
-	        	PortalLogger.error("CNT_update Error: " + app.getAPP_NAME(), e);
+	        	PortalLogger.error(CLASSNAME, METHODNAME,  "CNT_update Error: " + app.getAPP_NAME(), e);
 	            return null;
 	        }
 	        return app;

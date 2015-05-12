@@ -19,7 +19,7 @@ import com.imagsky.v81j.domain.ModForm;
 import com.imagsky.v81j.domain.Module;
 
 public class ModFormBiz extends BaseModuleBiz {
-
+	public static final String CLASSNAME = "ModFormBiz";
 	private ModuleBiz callerBiz;
 	private Module returnModule;
 	
@@ -47,6 +47,8 @@ public class ModFormBiz extends BaseModuleBiz {
 
 
 	private Module doUpdate() {
+		final String METHODNAME = "doUpdate";
+		
 		ModForm enqObj = new ModForm();
 		ModForm oldObj;
 
@@ -89,10 +91,10 @@ public class ModFormBiz extends BaseModuleBiz {
 				try{
 				tmpList = subdao.CNT_findListWithSample(tmpField);
 				} catch (Exception e){
-					PortalLogger.error("Get old field from DB : sys_guid - "+ this.getParamToString("field"+x), e);
+					PortalLogger.error(CLASSNAME, METHODNAME, "Get old field from DB : sys_guid - "+ this.getParamToString("field"+x), e);
 				}
 				if(CommonUtil.isNullOrEmpty(tmpList)){
-					PortalLogger.error("Cannot find old field from DB : sys_guid - "+ this.getParamToString("field"+x));
+					PortalLogger.error(CLASSNAME, METHODNAME, "Cannot find old field from DB : sys_guid - "+ this.getParamToString("field"+x));
 				} else {
 					tmpField = (FormField)tmpList.get(0);
 					tmpField.setFormfield_label(this.getParamToString("fieldname"+x));
@@ -151,6 +153,7 @@ public class ModFormBiz extends BaseModuleBiz {
         }
         
 	        enqObj.setForm_name(this.getParamToString("edit-form-title"));
+	        enqObj.setForm_success_msg(this.getParamToString("edit-form-success"));
 	        enqObj.setForm_fields(new HashSet<FormField>(fields));
 	        
 	        
@@ -162,13 +165,14 @@ public class ModFormBiz extends BaseModuleBiz {
 	        enqObj.setSys_is_node(Boolean.FALSE);
 	        enqObj = (ModForm)fdao.CNT_update(enqObj);		
         } catch (BaseDBException e) {
-        	PortalLogger.error("ModFormBiz.doUpdate()", e);
+        	PortalLogger.error(CLASSNAME, METHODNAME, "ModFormBiz.doUpdate()", e);
 		}
         return enqObj;
 	}
 
 
 	private Module doFind() {
+		final String METHODNAME = "doFind";
 		FormDAO mdao = FormDAO.getInstance();
 		ModForm enqObj = new ModForm();
 		try{
@@ -182,13 +186,15 @@ public class ModFormBiz extends BaseModuleBiz {
 			//ModFormForJson jsonObj = new ModFormForJson(enqObj);
 			//cmaLogger.debug(jsonObj.getJsonString());
 		} catch (BaseDBException e) {
-			PortalLogger.error("ModFormBiz.doFind()", e);
+			PortalLogger.error(CLASSNAME, METHODNAME, "ModFormBiz.doFind()", e);
 		}
 		return enqObj;
 	}
 
 
 	private Module doCreate(){
+		final String METHODNAME = "doCreate";
+		
 		FormDAO mdao = FormDAO.getInstance();
 		ModForm newMod = new ModForm();
 		try {
@@ -197,19 +203,21 @@ public class ModFormBiz extends BaseModuleBiz {
 			newMod.setForm_app(this.thisApp);
 			newMod = (ModForm)mdao.CNT_create(newMod);
 		} catch (BaseDBException e) {
-			PortalLogger.error("ModFormBiz.doCreate()", e);
+			PortalLogger.error(CLASSNAME, METHODNAME, "ModFormBiz.doCreate()", e);
 		}
 		return newMod;
 	}
 	
 	private Module doDelete(){
+		final String METHODNAME = "doDelete";
+		
 		FormDAO mdao = FormDAO.getInstance();
 		ModForm newMod = new ModForm();
 		try {
 			newMod.setSys_guid((String)thisParamMap.get("guid"));
 			mdao.CNT_delete(newMod);
 		} catch (BaseDBException e) {
-			PortalLogger.error("ModFormBiz.doDelete()", e);
+			PortalLogger.error(CLASSNAME, METHODNAME, "ModFormBiz.doDelete()", e);
 		}
 		return newMod;
 	}

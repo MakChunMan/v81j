@@ -3,12 +3,14 @@ package com.imagsky.dao;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+
 import com.imagsky.exception.BaseDBException;
 import com.imagsky.util.logger.PortalLogger;
 import com.imagsky.v81j.domain.AppImage;
 
 public class AppImageDAOImpl extends AppImageDAO {
-
+	public static final String CLASSNAME = "AppImageDAOImpl";
+	
     private static AppImageDAOImpl appImageDAOImpl = new AppImageDAOImpl();
     protected static final String thisDomainClassName = "com.imagsky.v81j.domain.AppImage";
     
@@ -22,6 +24,8 @@ public class AppImageDAOImpl extends AppImageDAO {
     
 	@Override
 	public Object CNT_update(Object obj) throws BaseDBException {
+		final String METHODNAME = "CNT_update";
+		
 		 	Class thisContentClass = contentClassValidation(domainClassName);
 	        EntityManager em = factory.createEntityManager();
 
@@ -47,7 +51,7 @@ public class AppImageDAOImpl extends AppImageDAO {
 	            em.getTransaction().commit();
 	            image = em.find(AppImage.class, image.getSys_guid());
 	        } catch (Exception e) {
-	        	PortalLogger.error("CNT_update Error: " + image.getImageUrl(), e);
+	        	PortalLogger.error(CLASSNAME, METHODNAME,  "CNT_update Error: " +  image.getImageUrl(), e);	        	
 	            return null;
 	        }
 	        return image;

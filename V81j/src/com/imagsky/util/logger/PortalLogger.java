@@ -92,7 +92,13 @@ public class PortalLogger {
         }
     }
 
-    public static void logError(String msg, Throwable th) {
+    public static void logError(String className, String methodName, String FreeTextInfo, Throwable th) {
+    	StringBuffer msg = new StringBuffer();
+
+        msg = msg.append(className + "\t");
+        msg = msg.append(methodName + "\t");
+        msg = msg.append(FreeTextInfo);
+        
         Logger logger = Logger.getLogger(LOGGER_NAME_V81_ERROR);
         logger.error(msg, th);
     }
@@ -121,27 +127,27 @@ public class PortalLogger {
         }
     }
 
-    public static void error(String message) {
-        log(message, ERROR_LEVEL);
+    public static void error(String className, String methodName, String message) {
+        log(className, methodName, message, ERROR_LEVEL);
     }
 
-    public static void error(String message, HttpServletRequest req) {
+    public static void error(String className, String methodName, String message, HttpServletRequest req) {
         if (req != null) {
-            log("[" + req.getSession().getId() + "] " + message, ERROR_LEVEL);
+            log(className, methodName, "[" + req.getSession().getId() + "] " + message, ERROR_LEVEL);
         } else {
-            error(message);
+            error(className, methodName, message);
         }
     }
 
-    public static void error(String message, Throwable th) {
-        logError(message, th);
+    public static void error(String className, String methodName, String message, Throwable th) {
+        logError(className, methodName, message, th);
     }
 
-    public static void error(String message, HttpServletRequest req, Throwable th) {
+    public static void error(String className, String methodName, String message, HttpServletRequest req, Throwable th) {
         if (req != null) {
-            logError("[" + req.getSession().getId() + "] " + message, th);
+            logError(className, methodName, "[" + req.getSession().getId() + "] " + message, th);
         } else {
-            logError(message, th);
+            logError(className, methodName, message, th);
         }
     }
 

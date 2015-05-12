@@ -1,7 +1,6 @@
 package com.imagsky.v81j.biz;
 
 import java.util.HashMap;
-
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -17,6 +16,8 @@ import com.imagsky.v81j.domain.Module;
 
 public class ModuleBiz  extends V8AbstractBiz {
 
+	public static final String CLASSNAME = "ModuleBiz";
+	
 	protected ModuleBiz(Member thisMember, HttpServletRequest req) {
 		super(thisMember, req);
 	}
@@ -35,6 +36,8 @@ public class ModuleBiz  extends V8AbstractBiz {
 	public enum ACTION_CODE { CREATE, UPDATE, DELETE, FIND };
 	
 	public Module createModule(int idx, App thisApp, String moduleTypeName){
+		final String METHODNAME = "createModule";
+		
 		Module returnModule = null;
 		BaseModuleBiz moduleBiz;
 		try{
@@ -52,12 +55,14 @@ public class ModuleBiz  extends V8AbstractBiz {
 				thisApp.setModules(aSet);
 				dao.CNT_update(thisApp);
 		} catch (Exception e){
-			PortalLogger.error("ModuleBiz exception:", e);
+			PortalLogger.error(CLASSNAME, METHODNAME, "ModuleBiz exception:", e);
 		}
 		return returnModule;
 	}
 	
 	public Module getModule(String moduleTypeName, String guid){
+		final String METHODNAME = "getModule";
+		
 		Module returnModule = null;
 		BaseModuleBiz moduleBiz;
 		try{
@@ -68,13 +73,15 @@ public class ModuleBiz  extends V8AbstractBiz {
 				moduleBiz.setApp(this.getThisWorkingApp());
 				returnModule = moduleBiz.execute(this, ACTION_CODE.FIND.name(), aParamMap);
 		} catch (Exception e){
-			PortalLogger.error("ModuleBiz exception:", e);
+			PortalLogger.error(CLASSNAME, METHODNAME, "ModuleBiz exception:", e);
 		}
 		return returnModule;
 	}
 
 	
 	public Module updateModule(String moduleTypeName, String moduleGuid){
+		final String METHODNAME = "updateModule";
+		
 		Module returnModule = null;
 		BaseModuleBiz moduleBiz;
 		try{
@@ -87,12 +94,14 @@ public class ModuleBiz  extends V8AbstractBiz {
 			returnModule = moduleBiz.execute(this, ACTION_CODE.UPDATE.name(), aParamMap);
 		} catch (Exception e){
 			this.addErrorMsg("ModuleBiz update exception: "+ this.getAllParamToString());
-			PortalLogger.error("ModuleBiz exception:", e);
+			PortalLogger.error(CLASSNAME, METHODNAME, "ModuleBiz exception:", e);
 		}
 		return returnModule;
 	}
 	
 	public void deleteModule(App thisApp, String moduleTypeName, String moduleGuid){
+		final String METHODNAME = "deleteModule";
+		
 		BaseModuleBiz moduleBiz;
 		AppDAO dao = AppDAO.getInstance();
 		try{
@@ -114,7 +123,7 @@ public class ModuleBiz  extends V8AbstractBiz {
 			dao.CNT_update(thisApp);
 		} catch (Exception e){
 			this.addErrorMsg("ModuleBiz delete exception: "+ this.getAllParamToString());
-			PortalLogger.error("ModuleBiz exception:", e);
+			PortalLogger.error(CLASSNAME, METHODNAME, "ModuleBiz exception:", e);
 		}
 		return;
 	}

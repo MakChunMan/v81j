@@ -1,6 +1,12 @@
+/*****
+ * 	2015-05-13:			 /portal/MOD/MOD_EDIT_ABOUTUS/mod_guid changes token index
+ *		2015-05-13 			/portal/MOD/MOD_EDIT_FORM/mod_guid changes token index 
+ * 
+ */
 package com.imagsky.v81j.servlet.handler;
 
 import javax.servlet.http.HttpServletRequest;
+
 import javax.servlet.http.HttpServletResponse;
 
 import com.imagsky.common.ImagskySession;
@@ -108,10 +114,12 @@ public class MOD_Handler extends BaseHandler {
 		
 		if(thisResp.hasError()){
 			thisResp.setTargetJSP(JspMapping.COMMON_AJAX_RESPONSE);
+			PortalLogger.debug("MOD_Handler - thisResp.hasError()");
 		} else {
 			request.setAttribute(SystemConstants.AJAX_RESULT, SystemConstants.AJAX_RESULT_TRUE);
 			request.setAttribute(SystemConstants.REQ_ATTR_DONE_MSG, "Save Successfully");
 			thisResp.setTargetJSP(JspMapping.COMMON_AJAX_RESPONSE);
+			PortalLogger.debug("MOD_Handler - thisResp non error");
 		}
 		//Reload working app
 		ImagskySession aSession = ((ImagskySession) request.getSession().getAttribute(SystemConstants.REQ_ATTR_SESSION));
@@ -123,19 +131,28 @@ public class MOD_Handler extends BaseHandler {
 	}
 
 	//Load About Us Edit Form
+	//2015-05-13 /portal/MOD/MOD_EDIT_ABOUTUS/mod_guid
 	private SiteResponse modShowAboutUs(HttpServletRequest request, HttpServletResponse response) {
 		SiteResponse thisResp = super.createResponse();
 		//Find saved details if necessary
+		PortalLogger.debug("modShowAboutUs start...");
 		if(appCodeToken.length>2 && !CommonUtil.isNullOrEmpty(appCodeToken[2])){
+			PortalLogger.debug("Mod ID:"+ appCodeToken[2]);
 			ModuleBiz biz = ModuleBiz.getInstance(thisMember, request);
 			ModAboutPage obj = (ModAboutPage)biz.getModule(Module.ModuleTypes.ModAboutPage.name(), appCodeToken[2]);
+			if(obj==null)
+				PortalLogger.debug("obj = null");
+			else 
+				PortalLogger.debug("obj"+ obj.getModuleTitle());
 			request.setAttribute(SystemConstants.REQ_ATTR_OBJ, obj);
 		}
+		PortalLogger.debug("modShowAboutUs end...");
 		thisResp.setTargetJSP(JspMapping.MOD_EDIT_ABOUTUS);
 		return thisResp;
 	}
 
 	//Load Form Edit Form
+	//2015-05-13 /portal/MOD/MOD_EDIT_FORM/mod_guid
 	private SiteResponse modShowForm(HttpServletRequest request, HttpServletResponse response) {
 		SiteResponse thisResp = super.createResponse();
 		//Find saved details if necessary
@@ -204,8 +221,9 @@ public class MOD_Handler extends BaseHandler {
 	}
 	
 	private static App getCurrentApp(Member thisMember, String appGuid){
+		final String METHODNAME = "getCurrentApp";
 		if(thisMember == null ){
-			PortalLogger.error("[V8-ModHandler-getCurrentApp] Not Yet Login");
+			PortalLogger.error(CLASS_NAME, METHODNAME, "[V8-ModHandler-getCurrentApp] Not Yet Login");
 			return null;
 		} else {
 			for(App aApp : thisMember.getApps()){
@@ -213,7 +231,7 @@ public class MOD_Handler extends BaseHandler {
 					return aApp;
 				}
 			}
-			PortalLogger.error("[V8-ModHandler-getCurrentApp] Not Found such app - "+ appGuid);
+			PortalLogger.error(CLASS_NAME, METHODNAME, "[V8-ModHandler-getCurrentApp] Not Found such app - "+ appGuid);
 		}
 		return null;
 	}

@@ -9,6 +9,7 @@ import com.imagsky.util.logger.PortalLogger;
 import com.imagsky.v81j.domain.FormSubmit;
 
 public class FormSubmitDAOImpl extends FormSubmitDAO {
+	public static final String CLASSNAME = "FormSubmitDAOImpl";
 
     private static FormSubmitDAOImpl formSubmitDAOImpl = new FormSubmitDAOImpl();
     protected static final String thisDomainClassName = "com.imagsky.v81j.domain.FormSubmit";
@@ -23,6 +24,8 @@ public class FormSubmitDAOImpl extends FormSubmitDAO {
     
 	@Override
 	public Object CNT_update(Object obj) throws BaseDBException {
+		final String METHODNAME = "CNT_update";
+		
 	 	Class thisContentClass = contentClassValidation(domainClassName);
         EntityManager em = factory.createEntityManager();
 
@@ -49,7 +52,7 @@ public class FormSubmitDAOImpl extends FormSubmitDAO {
             em.getTransaction().commit();
             formField = em.find(FormSubmit.class, formField.getSys_guid());
         } catch (Exception e) {
-            PortalLogger.error("CNT_update Error: " + formField.getFORM_GUID(), e);
+        	PortalLogger.error(CLASSNAME, METHODNAME,  "CNT_update Error: " + formField.getFORM_GUID(), e);
             return null;
         }
         return formField;

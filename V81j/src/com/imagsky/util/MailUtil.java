@@ -12,7 +12,8 @@ import javax.mail.*;
 import javax.mail.internet.*;
 
 public class MailUtil {
-
+	public final String CLASSNAME = "MailUtil";
+	
     private String host = null;
     private String toAddress = null;
     private String fromAddress = null;
@@ -55,6 +56,7 @@ public class MailUtil {
     }
 
     public boolean send() {
+    	final String METHODNAME = "send";
         if (!V81Util.isEmailOn()) {
             return true;
         }
@@ -151,14 +153,14 @@ public class MailUtil {
             return true;
 
         } catch (MessagingException mex) {
-            PortalLogger.error("Mail Sending Error: " + mex.getMessage());
+            PortalLogger.error(CLASSNAME, METHODNAME, "Mail Sending Error: " + mex.getMessage());
             // Prints all nested (chained) exceptions as well
             mex.printStackTrace();
             // How to access nested exceptions
             while (mex.getNextException() != null) {
                 // Get next exception in chain
                 Exception ex = mex.getNextException();
-                PortalLogger.error("Mail Sending Error: " + ex.getMessage());
+                PortalLogger.error(CLASSNAME, METHODNAME, "Mail Sending Error: " + ex.getMessage());
                 if (!(ex instanceof MessagingException)) {
                     break;
                 } else {

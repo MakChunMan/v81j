@@ -19,6 +19,8 @@ import javax.transaction.UserTransaction;
 
 public abstract class AbstractDbDAO {
 
+	public static final String CLASSNAME = "AbstractDbDAO";
+	
     protected static SQLProcessor APPDB_PROCESSOR(String appCode, String dbID) {
         return SQLProcessor.getInstance(appCode, dbID);
     }
@@ -31,7 +33,7 @@ public abstract class AbstractDbDAO {
         try {
             transaction = (UserTransaction) new InitialContext().lookup("java:comp/UserTransaction");
         } catch (Exception e) {
-            logError("AbstractDbDAO UserTransaction initialize failed: ", e);
+        	PortalLogger.error(CLASSNAME, "[Constructor]", "AbstractDbDAO UserTransaction initialize failed: ", e);
         }
     }
 
@@ -86,6 +88,7 @@ public abstract class AbstractDbDAO {
     }
 
     public List<Object> CNT_findListWithSample(Object enqObj, Integer startRow, Integer chunksize, String orderByField) throws BaseDBException {
+    	final String METHODNAME = "CNT_findListWithSample";
         Class<?> thisContentClass = contentClassValidation(domainClassName);
         /**
          * Find Domain Name such as "Member" **
@@ -101,9 +104,18 @@ public abstract class AbstractDbDAO {
             if (enqObj != null) {
                 Method method_getFields = thisContentClass.getMethod("getFields", new Class[]{Object.class});
                 Method method_getWildFields = thisContentClass.getMethod("getWildFields", new Class[]{});
+                Method method_getIgnoreFields = null;
+                List ignoreFields = null;
+                	try{
+                		method_getIgnoreFields = thisContentClass.getMethod("getIgnoreFields", new Class[]{});
+                		ignoreFields = (List) method_getIgnoreFields.invoke(null, new Object[]{});
+                	} catch (Exception e){
+                		PortalLogger.error(CLASSNAME, METHODNAME, domainClassName , e);
+                	}
                 JPAUtil jpaUtil = new JPAUtil(
                         (TreeMap<String, ?>) method_getFields.invoke(null, enqObj),
-                        (List) method_getWildFields.invoke(null, new Object[]{}));
+                        (List) method_getWildFields.invoke(null, new Object[]{}),
+                        ignoreFields); //2015-05-21 Add Ignore Fields
                 query = jpaUtil.getQuery(em, jpql_bf.toString(), "cnt", (CommonUtil.isNullOrEmpty(orderByField) ? "" : " " + orderByField));
             } else {
                 query = em.createQuery(jpql_bf.append((CommonUtil.isNullOrEmpty(orderByField) ? "" : " " + orderByField)).toString());
@@ -115,17 +127,17 @@ public abstract class AbstractDbDAO {
             }
             return query.getResultList();
         } catch (IllegalAccessException ex) {
-            PortalLogger.error("IllegalAccessException:", ex);
+            PortalLogger.error(CLASSNAME, METHODNAME, "IllegalAccessException:", ex);
         } catch (IllegalArgumentException ex) {
-            PortalLogger.error("IllegalArgumentException:", ex);
+            PortalLogger.error(CLASSNAME, METHODNAME, "IllegalArgumentException:", ex);
         } catch (InvocationTargetException ex) {
-            PortalLogger.error("InvocationTargetException:", ex);
+            PortalLogger.error(CLASSNAME, METHODNAME, "InvocationTargetException:", ex);
         } catch (NoSuchMethodException ex) {
-            PortalLogger.error("NoSuchMethodException:", ex);
+            PortalLogger.error(CLASSNAME, METHODNAME, "NoSuchMethodException:", ex);
         } catch (SecurityException ex) {
-            PortalLogger.error("SecurityException:", ex);
+            PortalLogger.error(CLASSNAME, METHODNAME, "SecurityException:", ex);
         } catch (Exception ex) {
-            PortalLogger.error("Exception:", ex);
+            PortalLogger.error(CLASSNAME, METHODNAME, "Exception:", ex);
         }
         return null;
     }
@@ -150,7 +162,9 @@ public abstract class AbstractDbDAO {
      * @throws BaseDBException
      */
     public int CNT_findTotalRecordCount(Object enqObj) throws BaseDBException {
-        Class thisContentClass = contentClassValidation(domainClassName);
+    	final String METHODNAME = "CNT_findTotalRecordCount";
+    	Class thisContentClass = contentClassValidation(domainClassName);
+        
         /**
          * Find Domain Name such as "Member" **
          */
@@ -176,24 +190,26 @@ public abstract class AbstractDbDAO {
             PortalLogger.debug(query.toString());
             return query.getResultList().size();
         } catch (IllegalAccessException ex) {
-            PortalLogger.error("IllegalAccessException:", ex);
+            PortalLogger.error(CLASSNAME, METHODNAME, "IllegalAccessException:", ex);
         } catch (IllegalArgumentException ex) {
-            PortalLogger.error("IllegalArgumentException:", ex);
+            PortalLogger.error(CLASSNAME, METHODNAME, "IllegalArgumentException:", ex);
         } catch (InvocationTargetException ex) {
-            PortalLogger.error("InvocationTargetException:", ex);
+            PortalLogger.error(CLASSNAME, METHODNAME, "InvocationTargetException:", ex);
         } catch (NoSuchMethodException ex) {
-            PortalLogger.error("NoSuchMethodException:", ex);
+            PortalLogger.error(CLASSNAME, METHODNAME, "NoSuchMethodException:", ex);
         } catch (SecurityException ex) {
-            PortalLogger.error("SecurityException:", ex);
+            PortalLogger.error(CLASSNAME, METHODNAME, "SecurityException:", ex);
         } catch (Exception ex) {
-            PortalLogger.error("Exception:", ex);
+            PortalLogger.error(CLASSNAME, METHODNAME, "Exception:", ex);
         }
         return 0;
     }
 
     public Object CNT_create(Object obj) throws BaseDBException {
+    	final String METHODNAME = "CNT_create";
         Class thisContentClass = contentClassValidation(domainClassName);
-        PortalLogger.debug("CNT_create: start");
+        
+        PortalLogger.debug("CNT_create "+ domainClassName+ ": start");
         EntityManager em = factory.createEntityManager();
         em.getTransaction().begin();
         beanValidate(obj);
@@ -208,22 +224,23 @@ public abstract class AbstractDbDAO {
             }
             em.persist(obj);
             em.getTransaction().commit();
-            PortalLogger.debug("CNT_create: end");
+            PortalLogger.debug("CNT_create "+ domainClassName+ ": end");
         } catch (SecurityException e) {
-        	PortalLogger.error("SecurityException", e);
+        	PortalLogger.error(CLASSNAME, METHODNAME, domainClassName+ " SecurityException", e);
         	return null;
         } catch (NoSuchMethodException e) {
             //Without get/set SysGuid
+        	PortalLogger.error(CLASSNAME, METHODNAME, domainClassName+ " NoSuchMethodException", e);
             em.persist(obj);
             em.getTransaction().commit();
         } catch (IllegalArgumentException e) {
-        	PortalLogger.error("IllegalArgumentException", e);
+        	PortalLogger.error(CLASSNAME, METHODNAME, domainClassName+ " IllegalArgumentException", e);
         	return null;
         } catch (IllegalAccessException e) {
-        	PortalLogger.error("IllegalAccessException", e);
+        	PortalLogger.error(CLASSNAME, METHODNAME, domainClassName+ " IllegalAccessException", e);
             return null;
         } catch (InvocationTargetException e) {
-        	PortalLogger.error("InvocationTargetException", e);
+        	PortalLogger.error(CLASSNAME, METHODNAME, domainClassName+ " InvocationTargetException", e);
             return null;
         }
         PortalLogger.debug("CNT_create: return obj");
@@ -231,7 +248,9 @@ public abstract class AbstractDbDAO {
     }
 
     public void CNT_delete(Object obj) throws BaseDBException {
+    	final String METHODNAME = "CNT_delete";
         Class thisContentClass = contentClassValidation(domainClassName);
+        
         EntityManager em = factory.createEntityManager();
         try {
             em.getTransaction().begin();
@@ -240,7 +259,7 @@ public abstract class AbstractDbDAO {
             em.remove(em.merge(obj));
             em.getTransaction().commit();
         } catch (Exception e) {
-            PortalLogger.error("CNT_delete", e);
+            PortalLogger.error(CLASSNAME, METHODNAME, domainClassName+ " CNT_delete", e);
         }
     }
 
@@ -249,7 +268,7 @@ public abstract class AbstractDbDAO {
 
     public abstract boolean update(Object obj) throws BaseDBException;
 
-
+    /***
     protected void logDebug(String msg) {
             PortalLogger.debug(msg);
     }
@@ -268,7 +287,7 @@ public abstract class AbstractDbDAO {
 
     protected void logError(String msg, Throwable t) {
        	PortalLogger.error(msg, t);
-    }
+    }***/
 
     protected Object checkPstmtValueNull(Object obj, int type) {
         if (obj != null) {
@@ -371,16 +390,16 @@ public abstract class AbstractDbDAO {
         }
     }
 
-    protected void beanValidate(Object entityObj)
-            throws BaseDBException {
+    protected void beanValidate(Object entityObj) throws BaseDBException {
+    	final String METHODNAME = "beanValidate";
         try {
             if (!Class.forName(domainClassName).isInstance(entityObj)) {
-            	PortalLogger.error("Using wrong DAO implementation: " + domainClassName + " with " + entityObj.getClass().getName());
+            	PortalLogger.error(CLASSNAME, METHODNAME, "Using wrong DAO implementation: " + domainClassName + " with " + entityObj.getClass().getName());
                 throw new BaseDBException("Using wrong DAO implementation: " + domainClassName + " with " + entityObj.getClass().getName(), "");
             }
             Class.forName(domainClassName).cast(entityObj);
         } catch (ClassNotFoundException e) {
-        	PortalLogger.error("ClassNotFound for " + domainClassName, e);        	
+        	PortalLogger.error(CLASSNAME, METHODNAME, "ClassNotFound for " + domainClassName, e);        	
             throw new BaseDBException("ClassNotFound for " + domainClassName, "", e);
 
         }

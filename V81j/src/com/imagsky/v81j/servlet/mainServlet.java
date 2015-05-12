@@ -30,6 +30,7 @@ import com.imagsky.v81j.servlet.handler.HandlerFactory;
  *
  */
 public class mainServlet extends HttpServlet {
+	public static final String CLASSNAME = "mainServlet";
 
 	private static final long serialVersionUID = 1L;
 
@@ -64,6 +65,8 @@ public class mainServlet extends HttpServlet {
      * response)
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    	final String METHODNAME = "doPost";
+    	
         PortalLogger.debug("*******************************************");
         /**
          * *****************************************
@@ -182,7 +185,7 @@ public class mainServlet extends HttpServlet {
                     actionHandler = HandlerFactory.createAction(appCode);
                     actionResponse = actionHandler.execute(request, response);
                 } catch (BaseException e) {
-                    PortalLogger.error("[ STEP 3. ActionHandler exception] ", request, e);
+                    PortalLogger.error(CLASSNAME, METHODNAME, "[ STEP 3. ActionHandler exception] ", request, e);
                 } // execute action
                 long actionTimeTaken = (System.currentTimeMillis() - actionStart);
 
@@ -232,7 +235,7 @@ public class mainServlet extends HttpServlet {
                 PortalLogger.debug("Entering MainServlet : doRequest [ END. Redirect to Login Page]", request);
             } else {
                 dispatcher = getServletContext().getRequestDispatcher("/error.jsp");
-                PortalLogger.error("Unknown exception in mainServlet: ", request, e);
+                PortalLogger.error(CLASSNAME, METHODNAME, "Unknown exception in mainServlet: ", request, e);
             }
             dispatcher.forward(request, response);
         }

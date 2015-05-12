@@ -20,6 +20,7 @@ try{
         while(it.hasNext()){
             SiteErrorMessage tmp = (SiteErrorMessage)it.next();
             //cmaLogger.debug("Site Response Error :" + tmp.getMsgCode(), request);
+            PortalLogger.error("common_ajax.jsp","","Error:"+MessageUtil.getV8Message("zh",tmp.getMsgCode()));
             out.println("Error:"+MessageUtil.getV8Message("zh",tmp.getMsgCode()));
         }
         %></div><br/><%
@@ -33,6 +34,6 @@ try{
     	out.println("Error:"+"undefined");
     }
 } catch (Exception e){
-    PortalLogger.error("Error in rendoring JSP error message",e);
+    PortalLogger.error("common_ajax.jsp","","Error in rendoring JSP error message",e);
 } 
 %>
