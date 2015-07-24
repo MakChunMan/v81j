@@ -1,5 +1,9 @@
 package com.imagsky.v81j.servlet.handler;
 
+import java.io.UnsupportedEncodingException;
+
+
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,6 +18,7 @@ import com.imagsky.util.CommonUtil;
 import com.imagsky.util.logger.PortalLogger;
 import com.imagsky.v81j.domain.FormSubmit;
 import com.imagsky.v81j.domain.JsonResponse;
+import com.sun.xml.messaging.saaj.util.Base64;
 
 public class SUBMIT_Handler extends BaseHandler {
 
@@ -71,9 +76,18 @@ public class SUBMIT_Handler extends BaseHandler {
 			formSubmit.setFORM_MACHINE_ID(request.getParameter("machine_id"));
 			formSubmit.setFORM_SENDER(request.getParameter("shop_id"));
 			
+			Base64 base64util = new Base64();
+			PortalLogger.debug("in: "+ request.getParameter("STR64"));
+			PortalLogger.debug("in: "+ request.getParameter("STR64").getBytes("UTF-8"));
+			PortalLogger.debug("in: "+ new String(
+					base64util.decode(CommonUtil.null2Empty(request.getParameter("STR64")).getBytes("UTF-8")),
+					"UTF-8"
+					));			
 			formSubmit.setFORM_SUBMIT_STRING(
-					request.getParameter("STR64")
-			);
+					new String(
+							base64util.decode(CommonUtil.null2Empty(request.getParameter("STR64")).getBytes("UTF-8")),
+							"UTF-8"
+			));
 			if(!thisResp.hasError()){
 				formSubmit = (FormSubmit)dao.CNT_create(formSubmit);
 				thisJsonResponse.setStatus(JsonResponse.STATUS_OK);
@@ -87,9 +101,9 @@ public class SUBMIT_Handler extends BaseHandler {
 			request.setAttribute("JsonResponse", jsonStrPy);
 		} catch (BaseDBException e) {
 			PortalLogger.error(CLASS_NAME, METHODNAME, "SUBMIT_Handler.doSubmit()", e);
+		} catch (UnsupportedEncodingException e){
+			PortalLogger.error(CLASS_NAME, METHODNAME, "SUBMIT_Handler.doSubmit()", e);
 		}
 		return thisResp;
 	}
 }
-
-	
