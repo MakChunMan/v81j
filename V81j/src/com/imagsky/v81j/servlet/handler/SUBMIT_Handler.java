@@ -2,8 +2,6 @@ package com.imagsky.v81j.servlet.handler;
 
 import java.io.UnsupportedEncodingException;
 
-
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -76,6 +74,7 @@ public class SUBMIT_Handler extends BaseHandler {
 			formSubmit.setFORM_MACHINE_ID(request.getParameter("machine_id"));
 			formSubmit.setFORM_SENDER(request.getParameter("shop_id"));
 			
+
 			Base64 base64util = new Base64();
 			PortalLogger.debug("in: "+ request.getParameter("STR64"));
 			PortalLogger.debug("in: "+ request.getParameter("STR64").getBytes("UTF-8"));
@@ -84,10 +83,8 @@ public class SUBMIT_Handler extends BaseHandler {
 					"UTF-8"
 					));			
 			formSubmit.setFORM_SUBMIT_STRING(
-					new String(
-							base64util.decode(CommonUtil.null2Empty(request.getParameter("STR64")).getBytes("UTF-8")),
-							"UTF-8"
-			));
+					request.getParameter("STR64")
+			);
 			if(!thisResp.hasError()){
 				formSubmit = (FormSubmit)dao.CNT_create(formSubmit);
 				thisJsonResponse.setStatus(JsonResponse.STATUS_OK);
@@ -107,3 +104,5 @@ public class SUBMIT_Handler extends BaseHandler {
 		return thisResp;
 	}
 }
+
+	
